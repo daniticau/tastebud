@@ -1,0 +1,30 @@
+import asyncpg
+
+from tastebud.config import get_settings
+
+_pool: asyncpg.Pool | None = None
+
+
+async def init_db_pool() -> None:
+    """Initialize the asyncpg connection pool."""
+    global _pool
+    _pool = await asyncpg.create_pool(
+        dsn=get_settings().database_url,
+        min_size=2,
+        max_size=10,
+    )
+
+
+async def get_pool() -> asyncpg.Pool:
+    """Get the active connection pool. Raises if not initialized."""
+    if _pool is None:
+        raise RuntimeError("Database pool not initialized")
+    return _pool
+
+
+async def close_db_pool() -> None:
+    """Close the connection pool."""
+    global _pool
+    if _pool:
+        await _pool.close()
+        _pool = None

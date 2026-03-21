@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: tastebud
+    runtime: docker
+    plan: free
+    envVars:
+      - key: TASTEBUD_DATABASE_URL
+        sync: false
+      - key: FASTMCP_STATELESS_HTTP
+        value: "true"
