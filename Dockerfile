@@ -5,10 +5,10 @@ WORKDIR /app
 RUN pip install uv
 
 COPY pyproject.toml .
-RUN uv pip install --system .
-
 COPY src/ src/
 COPY migrations/ migrations/
+
+RUN uv pip install --system .
 
 EXPOSE 8000
 
