@@ -8,10 +8,13 @@ _pool: asyncpg.Pool | None = None
 async def init_db_pool() -> None:
     """Initialize the asyncpg connection pool."""
     global _pool
+    dsn = get_settings().database_url
     _pool = await asyncpg.create_pool(
-        dsn=get_settings().database_url,
+        dsn=dsn,
         min_size=2,
         max_size=10,
+        # Supabase pooler (PgBouncer) requires statement_cache_size=0
+        statement_cache_size=0,
     )
 
 
